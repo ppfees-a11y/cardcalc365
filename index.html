@@ -1,40 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Credit Card Payoff Calculator | CardCalc365</title>
-<meta name="description" content="Free U.S. credit card payoff calculator. Estimate payoff time, total interest, total paid, and payoff date.">
+<meta name="description" content="Free credit card payoff calculator. Estimate payoff time, total interest, payment needed for a target payoff date, and the effect of extra monthly payments.">
 <link rel="stylesheet" href="style.css">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5287196493103465"
-     crossorigin="anonymous"></script>
-</head>
-<body>
-<header><div class="wrap top"><a class="brand" href="/">CardCalc365</a><nav><a href="/">Calculator</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></nav></div></header>
+</head><body>
+<header><div class="wrap top"><a class="brand" href="index.html">CardCalc365</a><nav><a href="#payoff">Payoff</a><a href="#target">Target Payment</a><a href="#guide">Guide</a><a href="#faq">FAQ</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></nav></div></header>
 <main class="wrap">
-<section class="hero"><h1>Credit Card Payoff Calculator</h1><p>Estimate how long it may take to pay off your credit card balance and how much interest you could pay.</p></section>
-<section class="card">
-<div class="grid">
-<label>Current Balance ($)<input id="balance" type="number" min="0" step="0.01" value="5000"></label>
-<label>APR (%)<input id="apr" type="number" min="0" step="0.01" value="24.99"></label>
-<label>Monthly Payment ($)<input id="payment" type="number" min="0" step="0.01" value="200"></label>
-</div>
-<button id="calc">Calculate Payoff</button>
-<p id="msg" class="msg"></p>
-<div class="results">
-<div><span>Estimated Payoff Time</span><strong id="time">—</strong></div>
-<div><span>Total Interest</span><strong id="interest">—</strong></div>
-<div><span>Total Amount Paid</span><strong id="paid">—</strong></div>
-<div><span>Estimated Payoff Date</span><strong id="date">—</strong></div>
-</div>
+<section class="hero"><p class="eyebrow">FREE CREDIT CARD PLANNING TOOLS</p><h1>Credit Card Payoff Calculator</h1><p class="lead">Estimate how long a balance could take to repay, how much interest you could pay, and what monthly payment may be needed to reach a payoff goal.</p></section>
+
+<section class="card" id="payoff"><h2>1. Payoff Time Calculator</h2><p>Enter a balance, APR, and fixed monthly payment.</p>
+<div class="grid"><label>Current balance ($)<input id="balance" type="number" min="0" step="10" value="5000"></label><label>APR (%)<input id="apr" type="number" min="0" step=".01" value="22"></label><label>Monthly payment ($)<input id="payment" type="number" min="0" step="5" value="200"></label></div>
+<button onclick="calcPayoff()">Calculate Payoff</button><p class="error" id="err1"></p>
+<div class="results"><div><span>Estimated payoff time</span><strong id="months">—</strong></div><div><span>Estimated total interest</span><strong id="interest">—</strong></div><div class="wide"><span>Estimated total paid</span><strong id="total">—</strong></div></div>
 </section>
-<section class="content">
-<h2>How it works</h2><p>Enter your current balance, annual percentage rate (APR), and the fixed amount you plan to pay each month. The calculator estimates how many months it may take to reach a zero balance, assuming no new charges and a constant APR.</p>
-<h2>Why your monthly payment matters</h2><p>Paying more than the minimum can reduce both the payoff time and total interest. If your payment is too low to cover the first month's interest, the balance will not decline under these assumptions.</p>
-<h2>Important</h2><p>This calculator provides general educational estimates only. Actual interest calculations, minimum-payment rules, fees, promotional rates, compounding, and statement timing vary by issuer.</p>
+
+<section class="card" id="target"><h2>2. Payment Needed for a Target Payoff</h2><p>Estimate the fixed monthly payment required to repay a balance within your chosen number of months.</p>
+<div class="grid"><label>Current balance ($)<input id="balance2" type="number" min="0" step="10" value="5000"></label><label>APR (%)<input id="apr2" type="number" min="0" step=".01" value="22"></label><label>Pay off within (months)<input id="targetMonths" type="number" min="1" step="1" value="36"></label></div>
+<button onclick="calcTarget()">Calculate Required Payment</button><p class="error" id="err2"></p>
+<div class="results"><div><span>Estimated monthly payment</span><strong id="needed">—</strong></div><div><span>Estimated total interest</span><strong id="targetInterest">—</strong></div></div>
 </section>
+
+<section class="card"><h2>3. Extra Payment Comparison</h2><p>Compare your regular payment with a larger fixed monthly payment.</p>
+<div class="grid"><label>Balance ($)<input id="balance3" type="number" min="0" step="10" value="5000"></label><label>APR (%)<input id="apr3" type="number" min="0" step=".01" value="22"></label><label>Regular payment ($)<input id="regular" type="number" min="0" step="5" value="200"></label><label>Extra each month ($)<input id="extra" type="number" min="0" step="5" value="50"></label></div>
+<button onclick="calcExtra()">Compare Payments</button><p class="error" id="err3"></p>
+<div class="results"><div><span>Regular payoff time</span><strong id="regularTime">—</strong></div><div><span>With extra payment</span><strong id="extraTime">—</strong></div><div><span>Estimated time saved</span><strong id="timeSaved">—</strong></div><div><span>Estimated interest saved</span><strong id="interestSaved">—</strong></div></div>
+<p class="note">Estimates assume no new purchases, fees, APR changes, promotional-rate changes, or missed payments, and that payments are applied as modeled.</p></section>
+
+<section class="content" id="guide"><h2>Understanding Credit Card Payoff Math</h2>
+<p>Credit cards commonly quote interest as an annual percentage rate, or APR. A simplified payoff estimate can convert that annual rate to a monthly rate and apply interest to the remaining balance each month. Actual issuers generally calculate interest using account-specific terms and often a daily periodic rate, so statement results can differ from this planning estimate.</p>
+<h3>Why the Payment Amount Matters</h3><p>When a payment is larger than the interest charged for the period, the remaining amount reduces principal. Increasing the amount applied to principal can shorten payoff time and reduce future interest, assuming no new charges are added.</p>
+<h3>Minimum Payments Can Change</h3><p>A card's required minimum payment is not necessarily a fixed amount. Issuers may calculate minimums using formulas described in the card agreement, and the required amount can change as the balance changes. For that reason, this calculator uses the fixed payment you enter rather than pretending to know your issuer's future minimum payments.</p>
+<h3>APR and Promotional Rates</h3><p>A promotional APR may apply only for a defined period. If the rate later changes, a calculation using only the promotional rate will not describe the entire payoff period. Use the rate that best fits the scenario you want to estimate and review your card agreement for actual terms.</p>
+<h3>New Purchases and Fees</h3><p>Adding purchases, cash advances, balance-transfer fees, late fees, annual fees, or other charges can increase the balance and change payoff results. The calculators intentionally exclude unknown future transactions.</p></section>
+
+<section class="content"><h2>Example</h2><p>For a $5,000 balance at 22% APR with a fixed $200 monthly payment and no new charges, this simplified monthly-interest model estimates payoff in about 34 months, with roughly $1,623 in interest. Your actual card statement may differ because issuers use their contractual interest and payment-allocation methods.</p></section>
+
+<section class="content"><h2>Ways to Use These Calculators</h2>
+<p>You can test several scenarios without changing your actual account: compare a current payment with a higher payment, estimate the payment associated with a desired payoff period, or see how different APR assumptions affect the result. The results are planning estimates, not instructions to choose a particular credit product or repayment strategy.</p></section>
+
+<section class="content" id="faq"><h2>Frequently Asked Questions</h2>
+<h3>Does CardCalc365 connect to my credit card account?</h3><p>No. You enter the numbers yourself, and the calculator does not log in to your issuer.</p>
+<h3>Is APR the same as the monthly interest rate?</h3><p>No. APR is an annualized rate. This simplified calculator divides APR by 12 to model a monthly rate.</p>
+<h3>Why could my statement interest differ?</h3><p>Credit-card issuers may use daily balances, daily periodic rates, different transaction categories, fees, grace-period rules, and other contractual terms.</p>
+<h3>What if my payment is too small?</h3><p>If the entered payment does not exceed the modeled monthly interest, the balance will not decline under this model. The calculator will warn you rather than displaying a misleading payoff date.</p>
+<h3>Does this calculator include new purchases?</h3><p>No. Payoff estimates assume no new charges.</p>
+<h3>Is this financial advice?</h3><p>No. CardCalc365 provides general educational calculations. For account-specific information, review your card agreement and statements or contact the card issuer.</p></section>
+
+<section class="content"><h2>About CardCalc365</h2><p>CardCalc365 is a free educational credit-card calculation website. It is not a bank, lender, card issuer, credit counselor, or financial adviser, and it does not offer or arrange credit.</p></section>
 </main>
-<footer><div class="wrap">© <span id="year"></span> CardCalc365 · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></div></footer>
-<script src="script.js"></script>
-</body>
-</html>
+<footer><div class="wrap"><p>Educational estimates only. Your card agreement and issuer statements control the actual terms of your account.</p><p class="creator">Created by James Gore</p><p><a href="index.html">Calculators</a> · <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a></p><p>© 2026 CardCalc365</p></div></footer>
+<script src="script.js"></script></body></html>

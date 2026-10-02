@@ -1,17 +1,1 @@
-const money=new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'});
-function calculate(){
-const start=parseFloat(document.getElementById('balance').value),apr=parseFloat(document.getElementById('apr').value),payment=parseFloat(document.getElementById('payment').value);
-const msg=document.getElementById('msg'),time=document.getElementById('time'),interestEl=document.getElementById('interest'),paidEl=document.getElementById('paid'),dateEl=document.getElementById('date');
-msg.textContent='';[time,interestEl,paidEl,dateEl].forEach(x=>x.textContent='—');
-if(!Number.isFinite(start)||start<=0||!Number.isFinite(apr)||apr<0||!Number.isFinite(payment)||payment<=0){msg.textContent='Please enter valid values.';return;}
-const r=apr/100/12;
-if(r>0&&payment<=start*r){msg.textContent='Your payment is not high enough to reduce the balance at this APR.';return;}
-let bal=start,totalInterest=0,totalPaid=0,months=0;
-while(bal>0.005&&months<1200){const i=bal*r;const due=bal+i;const p=Math.min(payment,due);totalInterest+=i;totalPaid+=p;bal=due-p;months++;}
-if(months>=1200){msg.textContent='Payoff period exceeds the calculator limit. Try a larger payment.';return;}
-const years=Math.floor(months/12),rem=months%12;let txt='';
-if(years)txt+=years+(years===1?' year':' years');if(rem)txt+=(txt?', ':'')+rem+(rem===1?' month':' months');
-const d=new Date();d.setMonth(d.getMonth()+months);
-time.textContent=txt||'Less than 1 month';interestEl.textContent=money.format(totalInterest);paidEl.textContent=money.format(totalPaid);dateEl.textContent=d.toLocaleDateString('en-US',{month:'long',year:'numeric'});
-}
-document.getElementById('calc').addEventListener('click',calculate);document.getElementById('year').textContent=new Date().getFullYear();calculate();
+const $=x=>document.getElementById(x),money=x=>x.toLocaleString("en-US",{style:"currency",currency:"USD"});function tm(m){let y=Math.floor(m/12),mo=m%12;return y?(y+" yr"+(mo?" "+mo+" mo":"")):mo+" mo"}function payoff(B,a,p){let r=a/100/12,b=B,i=0,m=0;if(r>0&&p<=B*r)return null;while(b>.005&&m<12000){let z=b*r,pr=p-z;if(pr<=0)return null;if(pr>b)pr=b;i+=z;b-=pr;m++}return{m,i,total:B+i}}function calcPayoff(){let b=+$("balance").value,a=+$("apr").value,p=+$("payment").value;$("err1").textContent="";if(!(b>0)||a<0||!(p>0)){ $("err1").textContent="Please enter valid positive values.";return}let x=payoff(b,a,p);if(!x){$("err1").textContent="This payment is too small to reduce the balance under this model.";return}$("months").textContent=tm(x.m);$("interest").textContent=money(x.i);$("total").textContent=money(x.total)}function calcTarget(){let b=+$("balance2").value,a=+$("apr2").value,n=+$("targetMonths").value;$("err2").textContent="";if(!(b>0)||a<0||!(n>0)){ $("err2").textContent="Please enter valid values.";return}let r=a/100/12,p=r===0?b/n:b*r/(1-Math.pow(1+r,-n));$("needed").textContent=money(p);$("targetInterest").textContent=money(p*n-b)}function calcExtra(){let b=+$("balance3").value,a=+$("apr3").value,p=+$("regular").value,e=+$("extra").value;$("err3").textContent="";if(!(b>0)||a<0||!(p>0)||e<0){$("err3").textContent="Please enter valid values.";return}let x=payoff(b,a,p),y=payoff(b,a,p+e);if(!x||!y){$("err3").textContent="The regular payment is too small to reduce the balance under this model.";return}$("regularTime").textContent=tm(x.m);$("extraTime").textContent=tm(y.m);$("timeSaved").textContent=tm(Math.max(0,x.m-y.m));$("interestSaved").textContent=money(Math.max(0,x.i-y.i))}calcPayoff();calcTarget();calcExtra();
